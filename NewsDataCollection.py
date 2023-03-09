@@ -4,8 +4,12 @@ import certifi
 import datetime 
 from datetime import *
 import time
-NYTKey = "AdyDdmHLhR4A6nFWJtS5qlgzG6xUoRCG"
-client = pymongo.MongoClient("mongodb+srv://shka5709:bdaData123@cluster0.1ng1cvf.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=certifi.where())
+
+from dotenv import dotenv_values
+config = dotenv_values(".env")
+
+NYTKey = config["NYT_KEY"]
+client = pymongo.MongoClient(config["ATLAS_URI"], tlsCAFile=certifi.where())
 db = client.test
 database = client['bda_data']
 citiesTable=database['cities']
@@ -34,8 +38,8 @@ def CheckNYTApi(place):
 			except:
 				image_url = None
 			articleList.append({"title": docs[i].get("abstract"),
-		       "snippet": docs[i].get("snippet"),"webUrl": docs[i].get("webUrl"),
-			   "source": docs[i].get("source"),"pubDate": docs[i].get("pubDate"),
+		       "snippet": docs[i].get("snippet"),"webUrl": docs[i].get("web_url"),
+			   "source": docs[i].get("source"),"pubDate": docs[i].get("pub_date"),
 			   "imageUrl": image_url})
 		
 		return articleList
