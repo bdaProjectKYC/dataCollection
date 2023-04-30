@@ -16,14 +16,14 @@ print("Connected to the MongoDB database!")
 API_KEY_places = 'ZzQScokvppuBbm7j4DZkW6R0x2GhD1L8kd-5GSun_6E8URRdk4nKQ78Ag1lae30npZ0lfkhXZgKrlK2eUGbWgZmbGxJj8MWHsJc40j3a_qz2LaWgpeXmfZeIrTErZHYx'
 
 
-def get_nearby_places(city):
+def get_nearby_places(city,city_ascii):
     url = 'https://api.yelp.com/v3/businesses/search'
     headers = {
         'Authorization': f'Bearer {API_KEY_places}'
     }
     params = {
-        'location': city,
-        'categories': 'arts,beautysvc,food,hotelstravel,localservices,nightlife,shopping'
+        'location': city_ascii,
+        'categories': 'active'
     }
     response = requests.get(url, headers=headers, params=params)
     data = response.json()
@@ -47,10 +47,10 @@ def get_nearby_places(city):
     return allPlaces
 
 
-searchList = list(collection_name_cities.find({}, {"city": 1}))
+searchList = list(collection_name_cities.find({}, {"city": 1,"city_ascii": 1}))
 for i in range(len(searchList)):
-    print(searchList[i]['city'])
-    cityWithPlaces = get_nearby_places(searchList[i]['city'])
+    print(searchList[i]['city'],searchList[i]['city_ascii'])
+    cityWithPlaces = get_nearby_places(searchList[i]['city'],searchList[i]['city_ascii'])
     print(cityWithPlaces)
     document = collection_name_visits.insert_one(cityWithPlaces)
     print(f"Inserted document with id = {document.inserted_id}")
