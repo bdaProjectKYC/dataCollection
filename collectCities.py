@@ -20,7 +20,7 @@ for each in reader:
     row = {}
     population_numeric = int(each['population'])
     density_numeric = int(each['density'])
-    if population_numeric > 100000 and density_numeric > 2000:
+    if population_numeric > 100000 and density_numeric > 1500:
         for field in header:
             if field == 'population':
                 row[field] = population_numeric

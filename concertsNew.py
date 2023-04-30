@@ -24,10 +24,10 @@ print("Connected to the MongoDB database!")
 
 
 #find the city names from the database
-searchList = list(collection_name_cities.find({},{"city": 1}))
+searchList = list(collection_name_cities.find({},{"city": 1,"city_ascii": 1}))
 for i in range(len(searchList)):
-	print(searchList[i]['city'])
-	url  ="https://app.ticketmaster.com/discovery/v2/events.json?size=10&city=" + searchList[i]['city'] + "&startDateTime=" + todayString + "&endDateTime=" + sevenDaysLaterString + "&apikey=aCh1Tdhx4Fq0w9HkPeCRWav9KC2J78Rp"
+	print(searchList[i]['city'],searchList[i]['city_ascii'])
+	url  ="https://app.ticketmaster.com/discovery/v2/events.json?size=10&city=" + searchList[i]['city_ascii'] + "&startDateTime=" + todayString + "&endDateTime=" + sevenDaysLaterString + "&apikey=aCh1Tdhx4Fq0w9HkPeCRWav9KC2J78Rp"
 	response = requests.request("GET", url)
 	concertsData = json.loads(response.text)
 	events = []

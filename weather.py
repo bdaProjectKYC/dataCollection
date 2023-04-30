@@ -21,11 +21,11 @@ collection_name_weather.drop()
 print("Connected to the MongoDB database!")
 
 
-def get_forecast(city):
+def get_forecast(city,city_ascii):
     url = "https://weatherapi-com.p.rapidapi.com/forecast.json"
     forecast = []
     for d in dates:
-        querystring = {"q": city, "dt": d}
+        querystring = {"q": city_ascii, "dt": d}
         headers = {
             "X-RapidAPI-Key": "3190c40e26mshe60b9f6113e6e2cp16a39ajsn4f4cfbe27855",
             "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com"
@@ -34,6 +34,7 @@ def get_forecast(city):
         data = json.loads(response.text)
         singleForecast = {"date": data["forecast"]["forecastday"][0]["date"],
                           "condition": data["forecast"]["forecastday"][0]["day"]["condition"]["text"],
+                          "condition_icon": data["forecast"]["forecastday"][0]["day"]["condition"]["icon"],
                           "maxtemp_c": data["forecast"]["forecastday"][0]["day"]["maxtemp_c"],
                           "mintemp_c": data["forecast"]["forecastday"][0]["day"]["mintemp_c"],
                           "maxtemp_f": data["forecast"]["forecastday"][0]["day"]["maxtemp_f"],
@@ -49,10 +50,10 @@ def get_forecast(city):
     return allForecast
 
 
-searchList = list(collection_name_cities.find({}, {"city": 1}))
+searchList = list(collection_name_cities.find({}, {"city": 1,"city_ascii": 1}))
 
 for i in range(len(searchList)):
-    print(searchList[i]['city'])
-    cityWithForecast = get_forecast(searchList[i]['city'])
+    print(searchList[i]['city'],searchList[i]['city_ascii'])
+    cityWithForecast = get_forecast(searchList[i]['city'],searchList[i]['city_ascii'])
     document = collection_name_weather.insert_one(cityWithForecast)
     print(f"Inserted document with id = {document.inserted_id}")
